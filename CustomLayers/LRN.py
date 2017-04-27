@@ -1,5 +1,4 @@
 from keras.engine import Layer, InputSpec
-from keras import initializations
 from keras import backend as K
 
 
