@@ -7,7 +7,8 @@ from TCNN3 import create_model as TCNN3
 train_data_dir = sys.argv[1]
 val_data_dir = sys.argv[2]
 num_classes = 47
-num_samples = 40
+num_samples_per_class = 40
+num_epochs = 100
 batch_size = 10
 
 xy, img_input = TCNN3(num_classes)
@@ -39,14 +40,14 @@ val_datagen = datagen.flow_from_directory(
 
 callbacks = [
     ModelCheckpoint('tmp/TCNN3.weights.dtd.h5', save_best_only=True, verbose=1),
-    EarlyStopping(min_delta=0.001, patience=5, verbose=1),
-    ReduceLROnPlateau(factor=0.2, patience=1, verbose=1, min_lr=0.00005)
+    EarlyStopping(monitor="loss", min_delta=0.0001, patience=10, verbose=1),
+    ReduceLROnPlateau(monitor="val_loss", factor=0.1, patience=2, verbose=1, min_lr=0.00001),
 ]
 
 model.fit_generator(
     train_datagen,
-    steps_per_epoch=num_samples*num_classes // batch_size,
-    epochs=50,
+    steps_per_epoch=num_samples_per_class*num_classes // batch_size,
+    epochs=num_epochs,
     validation_data=val_datagen,
-    validation_steps=num_samples*num_classes // batch_size,
+    validation_steps=num_samples_per_class*num_classes // batch_size,
     callbacks=callbacks)
