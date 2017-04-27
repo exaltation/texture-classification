@@ -13,10 +13,12 @@ def create_model(num_classes):
     kernel_size=(11, 11),
     strides=(4, 4),
     activation="relu",
-    kernel_initializer=TruncatedNormal(stddev=0.01))
+    kernel_initializer=TruncatedNormal(stddev=0.01),
+    data_format="channels_last",
+    padding="same")
 
     # first Pooling
-    x = MaxPooling2D(pool_size=(3, 3), strides=(2, 2))(x)
+    x = MaxPooling2D(pool_size=(3, 3), strides=(2, 2), data_format="channels_last")(x)
 
     # first Local response normalization
     x = LRN2D()(x)
@@ -25,10 +27,12 @@ def create_model(num_classes):
     x = Conv2D(256,
     kernel_size=(5, 5),
     activation="relu",
-    kernel_initializer=TruncatedNormal(stddev=0.01))(x)
+    kernel_initializer=TruncatedNormal(stddev=0.01),
+    data_format="channels_last",
+    padding="same")(x)
 
     # second Pooling
-    x = MaxPooling2D(pool_size=(3, 3), strides=(2, 2))(x)
+    x = MaxPooling2D(pool_size=(3, 3), strides=(2, 2), data_format="channels_last")(x)
 
     # second Local response normalization
     x = LRN2D()(x)
@@ -37,10 +41,12 @@ def create_model(num_classes):
     x = Conv2D(384,
     kernel_size=(5, 5),
     activation="relu",
-    kernel_initializer=TruncatedNormal(stddev=0.01))(x)
+    kernel_initializer=TruncatedNormal(stddev=0.01),
+    data_format="channels_last",
+    padding="same")(x)
 
     # Energy layer
-    x = AveragePooling2D(pool_size=(13, 13))(x)
+    x = AveragePooling2D(pool_size=(13, 13), data_format="channels_last")(x)
     x = Flatten()(x)
 
     # Fully connected layers
