@@ -7,6 +7,7 @@ from CustomLayers.LRN import LRN2D
 DROPOUT = 0.5
 
 def create_model(num_classes):
+    inputs = Input(shape=(227, 227, 3))
     # first Conv2D+Relu
     x = Conv2D(96,
     input_shape=(227, 227, 3),
@@ -15,7 +16,7 @@ def create_model(num_classes):
     activation="relu",
     kernel_initializer=TruncatedNormal(stddev=0.01),
     data_format="channels_last",
-    padding="same")
+    padding="same")(inputs)
 
     # first Pooling
     x = MaxPooling2D(pool_size=(3, 3), strides=(2, 2), data_format="channels_last")(x)
@@ -58,4 +59,4 @@ def create_model(num_classes):
 
     x = Dense(num_classes, activation='softmax')(x)
 
-    return x, Input(227, 227, 3)
+    return x, inputs

@@ -9,10 +9,11 @@ val_data_dir = sys.argv[2]
 num_classes = 47
 num_samples = 40
 batch_size = 10
+
 xy, img_input = TCNN3(num_classes)
 
-model = Model(inputs=[img_input],
-              outputs=[xy])
+model = Model(inputs=img_input,
+              outputs=xy)
 
 model.compile(optimizer='rmsprop',
               loss='categorical_crossentropy',
@@ -22,7 +23,7 @@ datagen = ImageDataGenerator(
     # samplewise_center=True,
     # samplewise_std_normalization=True,
     fill_mode='nearest',
-    horizontal_flip=True,
+    # horizontal_flip=True,
     rescale=1./255,
     data_format='channels_last')
 
