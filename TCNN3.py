@@ -1,4 +1,4 @@
-from keras.layers import Dense, Dropout, Flatten
+from keras.layers import Dense, Dropout, Flatten, Input
 from keras.layers import Conv2D, MaxPooling2D, AveragePooling2D
 from keras.initializers import TruncatedNormal
 from keras.models import Model
@@ -52,4 +52,4 @@ def create_model(num_classes):
 
     x = Dense(num_classes, activation='softmax')(x)
 
-    return x
+    return x, Input(227, 227, 3)

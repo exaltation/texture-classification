@@ -8,7 +8,7 @@ train_data_dir = sys.argv[1]
 val_data_dir = sys.argv[2]
 num_samples = 47*40
 batch_size = 10
-xy, img_input, CONCAT_AXIS, INP_SHAPE, DIM_ORDERING = TCNN3.create_model()
+xy, img_input = TCNN3()
 
 model = Model(inputs=[img_input],
               outputs=[xy])
