@@ -6,9 +6,10 @@ from TCNN3 import create_model as TCNN3
 
 train_data_dir = sys.argv[1]
 val_data_dir = sys.argv[2]
-num_samples = 47*40
+num_classes = 47
+num_samples = 40
 batch_size = 10
-xy, img_input = TCNN3()
+xy, img_input = TCNN3(num_classes)
 
 model = Model(inputs=[img_input],
               outputs=[xy])
@@ -43,8 +44,8 @@ callbacks = [
 
 model.fit_generator(
     train_datagen,
-    steps_per_epoch=num_samples // batch_size,
+    steps_per_epoch=num_samples*num_classes // batch_size,
     epochs=50,
     validation_data=val_datagen,
-    validation_steps=num_samples // batch_size,
+    validation_steps=num_samples*num_classes // batch_size,
     callbacks=callbacks)
