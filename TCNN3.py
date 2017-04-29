@@ -14,7 +14,7 @@ def create_model(num_classes):
     kernel_size=(11, 11),
     strides=(4, 4),
     activation="relu",
-    kernel_initializer=TruncatedNormal(stddev=0.01),
+    # kernel_initializer=TruncatedNormal(stddev=0.01),
     data_format="channels_last",
     padding="same")(inputs)
 
@@ -28,7 +28,7 @@ def create_model(num_classes):
     x = Conv2D(256,
     kernel_size=(5, 5),
     activation="relu",
-    kernel_initializer=TruncatedNormal(stddev=0.01),
+    # kernel_initializer=TruncatedNormal(stddev=0.01),
     data_format="channels_last",
     padding="same")(x)
 
@@ -42,7 +42,7 @@ def create_model(num_classes):
     x = Conv2D(384,
     kernel_size=(5, 5),
     activation="relu",
-    kernel_initializer=TruncatedNormal(stddev=0.01),
+    # kernel_initializer=TruncatedNormal(stddev=0.01),
     data_format="channels_last",
     padding="same")(x)
 
