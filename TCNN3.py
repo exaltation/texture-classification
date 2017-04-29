@@ -22,7 +22,7 @@ def create_model(num_classes):
     x = MaxPooling2D(pool_size=(3, 3), strides=(2, 2), data_format="channels_last")(x)
 
     # first Local response normalization
-    x = LRN2D()(x)
+    # x = LRN2D()(x)
 
     # second Conv2D+Relu
     x = Conv2D(256,
@@ -36,7 +36,7 @@ def create_model(num_classes):
     x = MaxPooling2D(pool_size=(3, 3), strides=(2, 2), data_format="channels_last")(x)
 
     # second Local response normalization
-    x = LRN2D()(x)
+    # x = LRN2D()(x)
 
     # third Conv2D+Relu
     x = Conv2D(384,
