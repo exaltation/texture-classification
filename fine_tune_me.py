@@ -1,6 +1,7 @@
 import sys
 from models.resnet50 import ResNet50
 from keras.preprocessing.image import ImageDataGenerator
+from keras.models import Sequential
 from keras.layers import Input, Flatten, Dense, Dropout
 
 train_data_dir = sys.argv[1]
