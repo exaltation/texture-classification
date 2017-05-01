@@ -1,7 +1,7 @@
 import sys
 from models.resnet50 import ResNet50
 from keras.preprocessing.image import ImageDataGenerator
-from keras.layers import Flatten, Dense, Dropout
+from keras.layers import Input, Flatten, Dense, Dropout
 
 train_data_dir = sys.argv[1]
 val_data_dir = sys.argv[2]
@@ -32,7 +32,8 @@ model = ResNet50(
     weights='imagenet',
     input_shape=(227, 227, 3))
 
-top_model = Input(shape=model.output_shape)
+s = model.output_shape
+top_model = Input(shape=(s[1], s[2], s[3]))
 top_model = Flatten()(top_model)
 top_model = Dense(4096, activation='relu')(top_model)
 top_model = Dropout(0.5)(top_model)
