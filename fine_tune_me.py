@@ -1,7 +1,7 @@
 import sys
 from models.resnet50 import ResNet50
 from keras.preprocessing.image import ImageDataGenerator
-from keras.models import Sequential
+from keras.models import Model
 from keras.layers import Input, Flatten, Dense, Dropout
 
 train_data_dir = sys.argv[1]
@@ -33,16 +33,16 @@ model = ResNet50(
     weights='imagenet',
     input_shape=(227, 227, 3))
 
-top_model = Sequential()
-top_model.add(Flatten(input_shape=model.output_shape[1:]))
-top_model.add(Dense(4096, activation='relu'))
-top_model.add(Dropout(0.5))
-top_model.add(Dense(4096, activation='relu'))
-top_model.add(Dropout(0.5))
-top_model.add(Dense(num_classes, activation='softmax'))
+# top_model = Sequential()
+top_model = Flatten()(model.output)
+top_model = Dense(4096, activation='relu')(top_model)
+top_model = Dropout(0.5)(top_model)
+top_model = Dense(4096, activation='relu')(top_model)
+top_model = Dropout(0.5)(top_model)
+top_model = Dense(num_classes, activation='softmax')(top_model)
 
-model = model(top_model)
+main_model = Model(input=model.input, output=top_model)
 
-for layer in model.layers[:-3]:
+for layer in main_model.layers[:-3]:
     print(layer.name)
     layer.trainable = False
