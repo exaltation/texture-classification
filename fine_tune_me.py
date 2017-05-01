@@ -41,17 +41,17 @@ top_model = Dense(4096, activation='relu', name="dense2_top")(top_model)
 top_model = Dropout(0.5)(top_model)
 top_model = Dense(num_classes, activation='softmax', name="dense3_top")(top_model)
 #====================================================================
-main_model = Model(input=model.input, output=top_model)
+main_model = Model(inputs=model.input, outputs=top_model)
 
 for layer in main_model.layers[:-6]:
     layer.trainable = False
 #====================================================================
-model.compile(
+main_model.compile(
     loss='categorical_crossentropy',
     optimizer=SGD(lr=1e-4, momentum=0.9),
     metrics=['accuracy'])
 #====================================================================
-model.fit_generator(
+main_model.fit_generator(
     train_generator,
     steps_per_epoch=100*num_classes // batch_size,
     epochs=num_epochs,
