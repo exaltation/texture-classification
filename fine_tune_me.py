@@ -32,7 +32,8 @@ model = ResNet50(
     weights='imagenet',
     input_shape=(227, 227, 3))
 
-top_model = Flatten(input_shape=model.output_shape[1:])
+top_model = Input(shape=model.output_shape)
+top_model = Flatten()(top_model)
 top_model = Dense(4096, activation='relu')(top_model)
 top_model = Dropout(0.5)(top_model)
 top_model = Dense(4096, activation='relu')(top_model)
