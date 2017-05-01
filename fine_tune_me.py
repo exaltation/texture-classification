@@ -34,12 +34,12 @@ model = ResNet50(
     input_shape=(227, 227, 3))
 
 # top_model = Sequential()
-top_model = Flatten()(model.output)
-top_model = Dense(4096, activation='relu')(top_model)
+top_model = Flatten(name="flatten_top")(model.output)
+top_model = Dense(4096, activation='relu', name="dense1_top")(top_model)
 top_model = Dropout(0.5)(top_model)
-top_model = Dense(4096, activation='relu')(top_model)
+top_model = Dense(4096, activation='relu', name="dense2_top")(top_model)
 top_model = Dropout(0.5)(top_model)
-top_model = Dense(num_classes, activation='softmax')(top_model)
+top_model = Dense(num_classes, activation='softmax', name="dense3_top")(top_model)
 
 main_model = Model(input=model.input, output=top_model)
 
