@@ -1,6 +1,6 @@
 from keras.layers import Dense, Dropout, Flatten, Input
 from keras.layers import Conv2D, MaxPooling2D, AveragePooling2D
-from keras.initializers import TruncatedNormal
+from keras.initializers import TruncatedNormal, RandomNormal
 from keras.models import Model
 from CustomLayers.LRN import LRN2D
 
@@ -14,9 +14,10 @@ def create_model(num_classes):
     kernel_size=(11, 11),
     strides=(4, 4),
     activation="relu",
-    # kernel_initializer=TruncatedNormal(stddev=0.01),
+    kernel_initializer=RandomNormal(stddev=0.01),
     data_format="channels_last",
-    padding="same")(inputs)
+    # padding="same",
+    )(inputs)
 
     # first Pooling
     x = MaxPooling2D(pool_size=(3, 3), strides=(2, 2), data_format="channels_last")(x)
@@ -28,9 +29,10 @@ def create_model(num_classes):
     x = Conv2D(256,
     kernel_size=(5, 5),
     activation="relu",
-    # kernel_initializer=TruncatedNormal(stddev=0.01),
+    kernel_initializer=RandomNormal(stddev=0.01),
     data_format="channels_last",
-    padding="same")(x)
+    padding="same",
+    )(x)
 
     # second Pooling
     x = MaxPooling2D(pool_size=(3, 3), strides=(2, 2), data_format="channels_last")(x)
@@ -40,23 +42,24 @@ def create_model(num_classes):
 
     # third Conv2D+Relu
     x = Conv2D(384,
-    kernel_size=(5, 5),
+    kernel_size=(3, 3),
     activation="relu",
-    # kernel_initializer=TruncatedNormal(stddev=0.01),
+    kernel_initializer=RandomNormal(stddev=0.01),
     data_format="channels_last",
-    padding="same")(x)
+    padding="same",
+    )(x)
 
     # Energy layer
     x = AveragePooling2D(pool_size=(13, 13), data_format="channels_last")(x)
     x = Flatten()(x)
 
     # Fully connected layers
-    x = Dense(2048, activation='relu')(x)
+    x = Dense(4096, activation='relu', kernel_initializer=RandomNormal(stddev=0.005))(x)
     x = Dropout(DROPOUT)(x)
 
-    x = Dense(2048, activation='relu')(x)
+    x = Dense(4096, activation='relu', kernel_initializer=RandomNormal(stddev=0.005))(x)
     x = Dropout(DROPOUT)(x)
 
-    x = Dense(num_classes, activation='softmax')(x)
+    x = Dense(num_classes, activation='softmax', kernel_initializer=RandomNormal(stddev=0.01))(x)
 
     return x, inputs
