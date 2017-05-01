@@ -21,17 +21,18 @@ val_datagen = ImageDataGenerator(
 #====================================================================
 train_generator = train_datagen.flow_from_directory(
     train_data_dir,
-    target_size=(224, 224),
+    target_size=(277, 277),
     batch_size=batch_size)
 
 val_generator = val_datagen.flow_from_directory(
     val_data_dir,
-    target_size=(224, 224),
+    target_size=(277, 277),
     batch_size=batch_size)
 #====================================================================
 model = ResNet50(
     include_top=False,
-    weights='imagenet')
+    weights='imagenet',
+    input_shape=(277, 277, 3))
 #====================================================================
 top_model = Flatten()(model.output)
 top_model = Dense(4096, activation='relu')(top_model)
