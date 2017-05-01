@@ -32,14 +32,12 @@ model = ResNet50(
     weights='imagenet',
     input_shape=(227, 227, 3))
 
-s = model.output_shape
-top_model = Input(shape=(s[1], s[2], s[3]))
-top_model = Flatten()(top_model)
-top_model = Dense(4096, activation='relu')(top_model)
-top_model = Dropout(0.5)(top_model)
-top_model = Dense(4096, activation='relu')(top_model)
-top_model = Dropout(0.5)(top_model)
-top_model = Dense(num_classes, activation='softmax')(top_model)
+model = Flatten()(model)
+model = Dense(4096, activation='relu')(model)
+model = Dropout(0.5)(model)
+model = Dense(4096, activation='relu')(model)
+model = Dropout(0.5)(model)
+model = Dense(num_classes, activation='softmax')(model)
 # top_model = Sequential()
 # top_model.add(Flatten())
 # top_model.add(Dense(4096, activation='relu'))
@@ -48,7 +46,7 @@ top_model = Dense(num_classes, activation='softmax')(top_model)
 # top_model.add(Dropout(0.5))
 # top_model.add(Dense(num_classes, activation='softmax'))
 
-model = model(top_model)
+# model = model(top_model)
 
 for layer in model.layers[:-3]:
     print(layer.name)
