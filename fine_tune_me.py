@@ -6,17 +6,21 @@ from keras.layers import Input, Flatten, Dense, Dropout
 from keras.optimizers import SGD
 from keras.callbacks import ModelCheckpoint, EarlyStopping
 
-train_data_dir = sys.argv[1]
-val_data_dir = sys.argv[2]
+data_dir = sys.argv[1]
+train_data_dir = data_dir + '/train'
+val_data_dir = data_dir + '/val'
 num_classes = 47
 num_epochs = 300
 batch_size = 16
+
+weights_path = 'tmp/resnet50.dtd_finetune.h5'
 #====================================================================
 train_datagen = ImageDataGenerator(
+    width_shift_range=0.2,
+    height_shift_range=0.2,
     rescale=1./255,
-    #samplewise_center=True,
-    #samplewise_std_normalization=True
-    )
+    fill_mode='reflect',
+    zoom_range=0.2)
 
 val_datagen = ImageDataGenerator(
     rescale=1./255)
@@ -44,7 +48,7 @@ top_model = Dropout(0.5)(top_model)
 top_model = Dense(num_classes, activation='softmax')(top_model)
 #====================================================================
 main_model = Model(inputs=model.input, outputs=top_model)
-
+main_model.load_weights(weights_path)
 for layer in main_model.layers[:-4]:
     layer.trainable = False
 #====================================================================
@@ -54,8 +58,8 @@ main_model.compile(
     metrics=['accuracy'])
 #====================================================================
 callbacks = [
-    ModelCheckpoint('tmp/resnet50.dtd_finetune.h5', save_best_only=True, verbose=1),
-    EarlyStopping(monitor="loss", min_delta=0.0001, patience=20, verbose=1)
+    ModelCheckpoint(weights_path, save_best_only=True, verbose=1),
+    EarlyStopping(monitor="val_loss", min_delta=0.0001, patience=20, verbose=1)
 ]
 #====================================================================
 main_model.fit_generator(
