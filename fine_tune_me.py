@@ -11,16 +11,13 @@ train_data_dir = data_dir + '/train'
 val_data_dir = data_dir + '/val'
 num_classes = 47
 num_epochs = 300
-batch_size = 16
+batch_size = 32
 
-weights_path = 'tmp/resnet50.dtd_finetune.h5'
+weights_path = 'tmp/resnet50.dtd_finetune.74.h5'
 #====================================================================
 train_datagen = ImageDataGenerator(
-    width_shift_range=0.2,
-    height_shift_range=0.2,
-    rescale=1./255,
-    fill_mode='reflect',
-    zoom_range=0.2)
+    zoom_range=0.25,
+    rescale=1./255)
 
 val_datagen = ImageDataGenerator(
     rescale=1./255)
@@ -58,8 +55,8 @@ main_model.compile(
     metrics=['accuracy'])
 #====================================================================
 callbacks = [
-    ModelCheckpoint(weights_path, save_best_only=True, verbose=1),
-    EarlyStopping(monitor="val_loss", min_delta=0.0001, patience=20, verbose=1)
+    ModelCheckpoint('tmp/resnet50.dtd_finetune.h5', save_best_only=True, verbose=1),
+    EarlyStopping(monitor="loss", min_delta=0.0001, patience=10, verbose=1)
 ]
 #====================================================================
 main_model.fit_generator(
