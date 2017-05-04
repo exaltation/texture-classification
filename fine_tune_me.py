@@ -27,12 +27,11 @@ model_choice = dict(resnet50=ResNet50,
                     inception_v3=InceptionV3,
                     xception=Xception)
 
+model_name = sys.argv[1]
 if len(sys.argv) > 1:
-    data_dir = sys.argv[1]
+    data_dir = sys.argv[2]
 else:
     data_dir = '/home/inky/Desktop/datasets/dtd/images'
-
-model_name = sys.argv[2]
 
 num_classes = 47
 num_epochs = 50
