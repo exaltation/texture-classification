@@ -28,7 +28,7 @@ model_choice = dict(resnet50=ResNet50,
                     xception=Xception)
 
 model_name = sys.argv[1]
-if len(sys.argv) > 1:
+if len(sys.argv) > 2:
     data_dir = sys.argv[2]
 else:
     data_dir = '/home/inky/Desktop/datasets/dtd/images'
