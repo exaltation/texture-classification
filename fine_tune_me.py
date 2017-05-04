@@ -38,19 +38,6 @@ num_epochs = 50
 steps_per_epoch = 500
 batch_size = 16
 
-train_datagen = ImageDataGenerator(
-    width_shift_range=0.2,
-    height_shift_range=0.2,
-    shear_range=0.2,
-    zoom_range=0.2,
-    fill_mode='wrap',
-    rescale=1./255)
-
-train_generator = train_datagen.flow_from_directory(
-        data_dir,
-        target_size=(277, 277),
-        batch_size=batch_size)
-
 parent_dir = 'fine_tuning_models/' + model_name + '/'
 ensure_dir(parent_dir)
 features_file = parent_dir + 'train_features.npy'
@@ -63,6 +50,19 @@ def get_train_data():
         train_labels = np.load(open(labels_file))
         return train_features, train_labels
 
+    train_datagen = ImageDataGenerator(
+        width_shift_range=0.2,
+        height_shift_range=0.2,
+        shear_range=0.2,
+        zoom_range=0.2,
+        fill_mode='wrap',
+        rescale=1./255)
+
+    train_generator = train_datagen.flow_from_directory(
+            data_dir,
+            target_size=(277, 277),
+            batch_size=batch_size)
+            
     model = model_choice[model_name](
         include_top=False,
         weights='imagenet',
@@ -93,13 +93,12 @@ def get_train_data():
 train_data, train_labels = get_train_data()
 
 model = Sequential()
-model.add(Input(shape=train_data.shape[1:]))
-
 if model_name in ['vgg16', 'vgg19']:
+    model.add(Dense(4096, activation='relu', input_shape=train_data.shape[1:]))
     model.add(Dense(4096, activation='relu'))
-    model.add(Dense(4096, activation='relu'))
-
-model.add(Dense(num_classes, activation='softmax'))
+    model.add(Dense(num_classes, activation='softmax'))
+else:
+    model.add(Dense(num_classes, activation='softmax', input_shape=train_data.shape[1:]))
 
 model.compile(
     loss='categorical_crossentropy',
