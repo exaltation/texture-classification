@@ -1,16 +1,20 @@
 import sys
 from keras.preprocessing.image import ImageDataGenerator
 
-data_dir = sys.argv[1]
+if len(sys.argv) > 1:
+    data_dir = sys.argv[1]
+else:
+    data_dir = '/home/inky/Desktop/datasets/dtd/imgs_organized'
+
 train_data_dir = data_dir + '/train'
 val_data_dir = data_dir + '/val'
 
 datagen = ImageDataGenerator(
-        width_shift_range=0.2,
-        height_shift_range=0.2,
-        rescale=1./255,
-        zoom_range=0.2,
-        fill_mode='reflect')
+    width_shift_range=0.2,
+    height_shift_range=0.2,
+    shear_range=0.2,
+    zoom_range=0.2,
+    fill_mode='constant')
 
 i = 0
 for batch in datagen.flow_from_directory(train_data_dir,
