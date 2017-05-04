@@ -1,5 +1,5 @@
 import sys
-from models.xception import Xception
+from models.resnet50 import ResNet50
 from keras.preprocessing.image import ImageDataGenerator
 from keras.models import Sequential
 from keras.layers import Input, Flatten, Dense, Dropout
@@ -32,12 +32,12 @@ train_generator = train_datagen.flow_from_directory(
         batch_size=batch_size)
 
 def get_train_data():
-    if path.isfile('train_features.xception.npy') and path.isfile('train_labels.xception.npy'):
-        train_features = np.load(open('train_features.xception.npy'))
-        train_labels = np.load(open('train_labels.xception.npy'))
+    if path.isfile('train_features.resnet50.npy') and path.isfile('train_labels.resnet50.npy'):
+        train_features = np.load(open('train_features.resnet50.npy'))
+        train_labels = np.load(open('train_labels.resnet50.npy'))
         return train_features, train_labels
 
-    model = Xception(
+    model = ResNet50(
         include_top=False,
         weights='imagenet',
         input_shape=(277, 277, 3),
@@ -57,8 +57,8 @@ def get_train_data():
             if i == steps_per_epoch:
                 break
 
-    np.save(open('train_features.xception.npy', 'w'), train_features)
-    np.save(open('train_labels.xception.npy', 'w'), train_labels)
+    np.save(open('train_features.resnet50.npy', 'w'), train_features)
+    np.save(open('train_labels.resnet50.npy', 'w'), train_labels)
 
     return train_features, train_labels
 
@@ -77,5 +77,5 @@ model.fit(train_data, train_labels,
     batch_size=batch_size,
     validation_split=0.15,
     callbacks=[
-        ModelCheckpoint('bottleneck_fc_model.xception.h5', save_best_only=True, verbose=2, monitor="val_acc")
+        ModelCheckpoint('bottleneck_fc_model.resnet50.h5', save_best_only=True, verbose=2, monitor="val_acc")
     ])
