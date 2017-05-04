@@ -22,10 +22,10 @@ def ensure_dir(file_path):
         os.makedirs(directory)
 
 if len(sys.argv) < 2 or sys.argv[1] not in ['resnet50', 'vgg16', 'vgg19', 'inception_v3', 'xception']:
-    print("model name is invalid or not provided")
     print("please choose one of the following")
     print("resnet50, vgg16, vgg19, inception_v3, xception")
-    
+    raise ValueError("model name is invalid or not provided")
+
 model_choice = dict(resnet50=ResNet50,
                     vgg16=VGG16,
                     vgg19=VGG19,
