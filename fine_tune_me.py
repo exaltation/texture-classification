@@ -1,4 +1,5 @@
 import sys
+import os
 
 from models.resnet50 import ResNet50
 from models.vgg16 import VGG16
@@ -14,6 +15,11 @@ from keras.callbacks import ModelCheckpoint, EarlyStopping
 import numpy as np
 from os import path
 import progressbar
+
+def ensure_dir(file_path):
+    directory = os.path.dirname(file_path)
+    if not os.path.exists(directory):
+        os.makedirs(directory)
 
 model_choice = dict(resnet50=ResNet50,
                     vgg16=VGG16,
@@ -46,10 +52,16 @@ train_generator = train_datagen.flow_from_directory(
         target_size=(277, 277),
         batch_size=batch_size)
 
+parent_dir = 'fine_tuning_models/' + model_name + '/'
+ensure_dir(parent_dir)
+features_file = parent_dir + 'train_features.npy'
+labels_file = parent_dir + 'train_labels.npy'
+weights_file = parent_dir + 'bottleneck_fc_model.h5'
+
 def get_train_data():
-    if path.isfile('train_features.' + model_name + '.npy') and path.isfile('train_labels.' + model_name + '.npy'):
-        train_features = np.load(open('train_features.' + model_name + '.npy'))
-        train_labels = np.load(open('train_labels.' + model_name + '.npy'))
+    if path.isfile(features_file) and path.isfile(labels_file):
+        train_features = np.load(open(features_file))
+        train_labels = np.load(open(labels_file))
         return train_features, train_labels
 
     model = model_choice[model_name](
@@ -74,8 +86,8 @@ def get_train_data():
             if i == steps_per_epoch:
                 break
 
-    np.save(open('train_features.' + model_name + '.npy', 'w'), train_features)
-    np.save(open('train_labels.' + model_name + '.npy', 'w'), train_labels)
+    np.save(open(features_file, 'w'), train_features)
+    np.save(open(labels_file, 'w'), train_labels)
 
     return train_features, train_labels
 
@@ -101,5 +113,5 @@ model.fit(train_data, train_labels,
     batch_size=batch_size,
     validation_split=0.15,
     callbacks=[
-        ModelCheckpoint('bottleneck_fc_model.' + model_name + '.h5', save_best_only=True, verbose=2, monitor="val_acc")
+        ModelCheckpoint(weights_file, save_best_only=True, verbose=2, monitor="val_acc")
     ])
