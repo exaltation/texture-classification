@@ -81,7 +81,7 @@ my_root = '/home/inky/Documents/texture-classification'
 print("do you wish to test it on your own images? (y/N)")
 ans = raw_input()
 if ans == 'y' or ans == 'Y':
-    class_names = sorted(os.listdir("/home/inky/Desktop/datasets/dtd/images"))
+    class_names = np.load(open("class_names.npy"))
 
     while True:
         print("enter image file path")
