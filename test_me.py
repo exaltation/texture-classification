@@ -55,7 +55,7 @@ notop_model = model_choice[model_name](include_top=False,
                                     pooling='avg')
 
 top_model = Sequential()
-if model_name in ['vgg16', 'vgg19']:
+if model_name in ['vgg16', 'vgg19', 'resnet50']:
     top_model.add(Dense(4096, activation='relu', input_shape=notop_model.output_shape[1:]))
     top_model.add(Dense(4096, activation='relu'))
     top_model.add(Dense(num_classes, activation='softmax'))

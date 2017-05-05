@@ -97,7 +97,7 @@ def get_train_data():
 train_data, train_labels = get_train_data()
 
 model = Sequential()
-if model_name in ['vgg16', 'vgg19']:
+if model_name in ['vgg16', 'vgg19', 'resnet50']:
     model.add(Dense(4096, activation='relu', input_shape=train_data.shape[1:]))
     model.add(Dense(4096, activation='relu'))
     model.add(Dense(num_classes, activation='softmax'))
