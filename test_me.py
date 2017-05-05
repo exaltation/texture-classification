@@ -33,12 +33,12 @@ model_choice = dict(resnet50=ResNet50,
                     inception_v3=InceptionV3,
                     xception=Xception)
 
-if len(sys.argv) < 3:
-    print("please provide images directory as the second argument")
-    raise ValueError("images directory is not provided")
+if len(sys.argv) > 2:
+    images_dir = sys.argv[2]
+else:
+    images_dir = '/home/inky/Desktop/datasets/dtd/images'
 
 model_name = sys.argv[1]
-images_dir = sys.argv[2]
 
 parent_dir = 'fine_tuned_models/' + model_name + '/'
 weights_file = parent_dir + 'bottleneck_fc_model.h5'
@@ -74,10 +74,12 @@ datagen = ImageDataGenerator(
     rescale=1./255)
 
 generator = datagen.flow_from_directory(
-        '/home/inky/Desktop/datasets/dtd/images',
+        images_dir,
         target_size=(277, 277),
         batch_size=16)
 
-loss = model.evaluate_generator(generator, 100)
-print("{0}: {1}".format(model.metrics_names[0], loss[0]))
-print("{0}: {1}".format(model.metrics_names[1], loss[1]))
+print("evaluating...")
+metrics = model.evaluate_generator(generator, 100)
+
+print("{0}: {1}".format(model.metrics_names[0], metrics[0]))
+print("{0}: {1}".format(model.metrics_names[1], metrics[1]))
