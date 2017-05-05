@@ -11,6 +11,7 @@ from keras.preprocessing.image import ImageDataGenerator
 from keras.models import Sequential, Model
 from keras.layers import Input, Flatten, Dense, Dropout
 from keras.callbacks import ModelCheckpoint, EarlyStopping
+from keras.utils import plot_model
 
 import numpy as np
 import progressbar
@@ -64,11 +65,14 @@ top_model.load_weights(weights_file)
 model = Sequential()
 model.add(notop_model)
 model.add(top_model)
-# model.summary()
+
 model.compile(
     loss='categorical_crossentropy',
     optimizer='adam',
     metrics=['accuracy'])
+
+print("plotting model...")
+plot_model(model, show_shapes=True, to_file=os.path.dirname(weights_file) + '/model.png')
 
 datagen = ImageDataGenerator(
     rescale=1./255)
