@@ -1,5 +1,6 @@
 import sys
 import os
+from shutil import copyfile
 
 from models.resnet50 import ResNet50
 from models.vgg16 import VGG16
@@ -18,10 +19,11 @@ import progressbar
 
 num_classes = 47
 
-def ensure_dir(file_path):
+def make_new_dir(file_path):
     directory = os.path.dirname(file_path)
-    if not os.path.exists(directory):
-        os.makedirs(directory)
+    if os.path.exists(directory):
+        shutil.rmtree(directory)
+    os.makedirs(directory)
 
 if len(sys.argv) < 2 or sys.argv[1] not in ['resnet50', 'vgg16', 'vgg19', 'inception_v3', 'xception']:
     print("please choose one of the following")
@@ -87,3 +89,29 @@ metrics = model.evaluate_generator(generator, 100)
 
 print("{0}: {1}".format(model.metrics_names[0], metrics[0]))
 print("{0}: {1}".format(model.metrics_names[1], metrics[1]))
+
+print("do you wish to test it on your own images? (y/N)")
+ans = raw_input()
+if ans == 'y' or ans == 'Y':
+    while True:
+        print("enter image file path")
+        file_path = raw_input()
+        if not os.path.isfile(file_path) or not img_name.lower().endswith(('.bmp', '.jpeg', '.jpg', '.png', '.tif', '.tiff')):
+            print("File doesn't exist or has wrong extension")
+            print("supported file extensions are '.bmp', '.jpeg', '.jpg', '.png', '.tif', '.tiff'")
+            continue
+
+
+        make_new_dir('/temporary')
+        copyfile(file_path, '/temporary/' + file_path.split('/')[-1])
+        prediction = model.predict_generator(datagen.flow_from_directory(
+            '/temporary',
+            target_size=(277, 277),
+            batch_size=1
+        ), 1)
+        print(prediction)
+
+        print("wish one more? (y/N)")
+        ans = raw_input()
+        if ans != 'y' and ans != 'Y':
+            break
