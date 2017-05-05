@@ -64,4 +64,17 @@ top_model.load_weights(weights_file)
 model = Sequential()
 model.add(notop_model)
 model.add(top_model)
-model.summary()
+# model.summary()
+
+datagen = ImageDataGenerator(
+    rescale=1./255)
+
+generator = datagen.flow_from_directory(
+        '/home/inky/Desktop/datasets/dtd/images',
+        target_size=(277, 277),
+        batch_size=16)
+
+for batch, labels in generator:
+    loss = model.test_on_batch(batch, labels)
+    print(loss)
+    break
