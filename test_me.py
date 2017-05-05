@@ -8,7 +8,7 @@ from models.inception_v3 import InceptionV3
 from models.xception import Xception
 
 from keras.preprocessing.image import ImageDataGenerator
-from keras.models import Sequential
+from keras.models import Sequential, Model
 from keras.layers import Input, Flatten, Dense, Dropout
 from keras.callbacks import ModelCheckpoint, EarlyStopping
 
@@ -61,4 +61,5 @@ else:
 
 top_model.load_weights(weights_file)
 
-top_model.summary()
+model = Model(notop_model, top_model)
+model.summary()
