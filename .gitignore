@@ -101,4 +101,4 @@ tmp/
 preview/
 *.npy
 *.h5
-fine_tuning_models/
+fine_tuned_models/

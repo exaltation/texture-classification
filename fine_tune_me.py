@@ -13,7 +13,6 @@ from keras.layers import Input, Flatten, Dense, Dropout
 from keras.callbacks import ModelCheckpoint, EarlyStopping
 
 import numpy as np
-from os import path
 import progressbar
 
 def ensure_dir(file_path):
@@ -43,14 +42,14 @@ num_epochs = 50
 steps_per_epoch = 500
 batch_size = 16
 
-parent_dir = 'fine_tuning_models/' + model_name + '/'
+parent_dir = 'fine_tuned_models/' + model_name + '/'
 ensure_dir(parent_dir)
 features_file = parent_dir + 'train_features.npy'
 labels_file = parent_dir + 'train_labels.npy'
 weights_file = parent_dir + 'bottleneck_fc_model.h5'
 
 def get_train_data():
-    if path.isfile(features_file) and path.isfile(labels_file):
+    if os.path.isfile(features_file) and os.path.isfile(labels_file):
         train_features = np.load(open(features_file))
         train_labels = np.load(open(labels_file))
         return train_features, train_labels
