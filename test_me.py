@@ -73,27 +73,16 @@ model.compile(
     optimizer='adam',
     metrics=['accuracy'])
 
-print("plotting model...")
-plot_model(model, show_shapes=True, to_file=os.path.dirname(weights_file) + '/model.png')
-
 datagen = ImageDataGenerator(
     rescale=1./255)
 
-generator = datagen.flow_from_directory(
-        images_dir,
-        target_size=(277, 277),
-        batch_size=16)
-
-print("evaluating...")
-metrics = model.evaluate_generator(generator, 100)
-
-print("{0}: {1}".format(model.metrics_names[0], metrics[0]))
-print("{0}: {1}".format(model.metrics_names[1], metrics[1]))
-
 my_root = '/home/inky/Documents/texture-classification'
+
 print("do you wish to test it on your own images? (y/N)")
 ans = raw_input()
 if ans == 'y' or ans == 'Y':
+    class_names = sorted(os.listdir("/home/inky/Desktop/datasets/dtd/images"))
+
     while True:
         print("enter image file path")
         file_path = raw_input().rstrip()
@@ -103,16 +92,32 @@ if ans == 'y' or ans == 'Y':
             continue
 
 
-        make_new_dir(my_root + '/temporary/')
-        shutil.copyfile(file_path, my_root + '/temporary/' + file_path.split('/')[-1])
-        prediction = model.predict_generator(datagen.flow_from_directory(
-            my_root + '/temporary/',
-            target_size=(277, 277),
-            batch_size=1
-        ), 1)
-        print(prediction)
+        make_new_dir(my_root + '/temporary/t/')
+        shutil.copyfile(file_path, my_root + '/temporary/t/' + file_path.split('/')[-1])
+        for batch, lbls in datagen.flow_from_directory(my_root + '/temporary/',
+                                                target_size=(277, 277),
+                                                batch_size=1):
+            print(batch.shape)
+            prediction = model.predict_on_batch(batch)
+            break
+
+        print(class_names[prediction.argmax()])
 
         print("wish one more? (y/N)")
         ans = raw_input()
         if ans != 'y' and ans != 'Y':
             break
+else:
+    print("plotting model...")
+    plot_model(model, show_shapes=True, to_file=os.path.dirname(weights_file) + '/model.png')
+
+    generator = datagen.flow_from_directory(
+            images_dir,
+            target_size=(277, 277),
+            batch_size=16)
+
+    print("evaluating...")
+    metrics = model.evaluate_generator(generator, 100)
+
+    print("{0}: {1}".format(model.metrics_names[0], metrics[0]))
+    print("{0}: {1}".format(model.metrics_names[1], metrics[1]))
