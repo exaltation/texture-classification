@@ -40,3 +40,23 @@ images_dir = sys.argv[2]
 
 parent_dir = 'fine_tuned_models/' + model_name + '/'
 weights_file = parent_dir + 'bottleneck_fc_model.h5'
+
+if not os.path.exists(weights_file):
+    raise ValueError("cannot find weights for this model")
+
+notop_model = model_choice[model_name](include_top=False,
+                                    weights='imagenet',
+                                    input_shape=(277, 277, 3),
+                                    pooling='avg')
+
+top_model = Sequential()
+if model_name in ['vgg16', 'vgg19']:
+    top_model.add(Dense(4096, activation='relu', input_shape=notop_model.output_shape[1:]))
+    top_model.add(Dense(4096, activation='relu'))
+    top_model.add(Dense(num_classes, activation='softmax'))
+else:
+    top_model.add(Dense(num_classes, activation='softmax', input_shape=notop_model.output_shape[1:]))
+
+top_model.load_weights(weights_file)
+
+top_model.summary()
