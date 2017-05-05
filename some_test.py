@@ -14,7 +14,8 @@ datagen = ImageDataGenerator(
     height_shift_range=0.2,
     shear_range=0.2,
     zoom_range=0.2,
-    fill_mode='constant')
+    fill_mode='wrap',
+    rescale=1./255)
 
 i = 0
 for batch in datagen.flow_from_directory(train_data_dir,
