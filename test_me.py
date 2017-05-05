@@ -78,7 +78,10 @@ generator = datagen.flow_from_directory(
         target_size=(277, 277),
         batch_size=16)
 
-for batch, labels in generator:
-    loss = model.test_on_batch(batch, labels)
-    print(loss)
-    break
+loss = model.evaluate_generator(generator, 100)
+print(model.metrics_names[0] + ': ' + loss[0])
+print(model.metrics_names[1] + ': ' + loss[1])
+# for batch, labels in generator:
+#     loss = model.test_on_batch(batch, labels)
+#     print(loss)
+#     break
