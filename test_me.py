@@ -68,7 +68,7 @@ model.add(top_model)
 model.compile(
     loss='categorical_crossentropy',
     optimizer='adam',
-    metrics=['accuracy']))
+    metrics=['accuracy'])
 
 datagen = ImageDataGenerator(
     rescale=1./255)
