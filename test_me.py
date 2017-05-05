@@ -61,5 +61,7 @@ else:
 
 top_model.load_weights(weights_file)
 
-model = Model(notop_model.output, top_model)
+model = Sequential()
+model.add(notop_model)
+model.add(top_model)
 model.summary()
