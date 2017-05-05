@@ -65,6 +65,10 @@ model = Sequential()
 model.add(notop_model)
 model.add(top_model)
 # model.summary()
+model.compile(
+    loss='categorical_crossentropy',
+    optimizer='adam',
+    metrics=['accuracy']))
 
 datagen = ImageDataGenerator(
     rescale=1./255)
