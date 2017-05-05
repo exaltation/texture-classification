@@ -1,6 +1,6 @@
 import sys
 import os
-from shutil import copyfile
+import shutil
 
 from models.resnet50 import ResNet50
 from models.vgg16 import VGG16
@@ -90,22 +90,23 @@ metrics = model.evaluate_generator(generator, 100)
 print("{0}: {1}".format(model.metrics_names[0], metrics[0]))
 print("{0}: {1}".format(model.metrics_names[1], metrics[1]))
 
+my_root = '/home/inky/Documents/texture-classification'
 print("do you wish to test it on your own images? (y/N)")
 ans = raw_input()
 if ans == 'y' or ans == 'Y':
     while True:
         print("enter image file path")
-        file_path = raw_input()
-        if not os.path.isfile(file_path) or not img_name.lower().endswith(('.bmp', '.jpeg', '.jpg', '.png', '.tif', '.tiff')):
+        file_path = raw_input().rstrip()
+        if not os.path.isfile(file_path) or not file_path.lower().endswith(('.bmp', '.jpeg', '.jpg', '.png', '.tif', '.tiff')):
             print("File doesn't exist or has wrong extension")
             print("supported file extensions are '.bmp', '.jpeg', '.jpg', '.png', '.tif', '.tiff'")
             continue
 
 
-        make_new_dir('/temporary')
-        copyfile(file_path, '/temporary/' + file_path.split('/')[-1])
+        make_new_dir(my_root + '/temporary/')
+        shutil.copyfile(file_path, my_root + '/temporary/' + file_path.split('/')[-1])
         prediction = model.predict_generator(datagen.flow_from_directory(
-            '/temporary',
+            my_root + '/temporary/',
             target_size=(277, 277),
             batch_size=1
         ), 1)
