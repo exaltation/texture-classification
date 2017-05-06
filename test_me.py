@@ -98,7 +98,7 @@ if not images_dir:
     my_root = os.path.dirname(os.path.realpath(__file__))
     print("Please, enter path to folder, which contains images to evaluate on.")
     files_path = raw_input()
-    while not files_path.endswith('/')
+    while not files_path.endswith(('/'))
         print("Path should end with a slash ('/'), try once more")
         files_path = raw_input()
 
