@@ -21,12 +21,20 @@ sys.setrecursionlimit(40000)
 parser = OptionParser()
 
 parser.add_option("-p", "--path", dest="train_path", help="Path to training data.")
-parser.add_option("-m", "--model", dest="model_name", help="Specify a model to train: resnet50, vgg16, vgg19, inception_v3 or xception.")
-parser.add_option("-s", "--suffix", dest="suffix", help="Model will be saved with provided suffix, i.e. bottleneck_fc_model.[suffix].h5.")
+parser.add_option("-m", "--model", dest="model_name",
+				help="Specify a model to train: resnet50, vgg16, vgg19, inception_v3 or xception.")
+parser.add_option("-s", "--suffix", dest="suffix",
+				help="Model will be saved with provided suffix, i.e. bottleneck_fc_model.[suffix].h5.")
 parser.add_option("--num-epochs", dest="num_epochs", help="Number of epochs. Defaults to 50", default=50)
-parser.add_option("--batch-size", dest="batch_size", help="Batch size. Defaults to 16", default=16)
-parser.add_option("--steps-per-epoch", dest="steps_per_epoch", help="Steps per epoch. Defaults to 500", default=500)
-parser.add_option("--validation-split", dest="validation_split", help="Amount of data for validation set. Defaults to 0.15", default=0.15)
+parser.add_option("--batch-size", dest="batch_size",
+				help="Batch size. Defaults to 16", default=16)
+parser.add_option("--steps-per-epoch", dest="steps_per_epoch",
+				help="Steps per epoch. Defaults to 500", default=500)
+parser.add_option("--validation-split", dest="validation_split",
+				help="Amount of data for validation set. Defaults to 0.15", default=0.15)
+parser.add_option("--ignore-saved-features",
+                  action="store_true", dest="ignore_saved_features", default=False,
+                  help="Ignore saved features for this model and prefix")
 
 (options, args) = parser.parse_args()
 
