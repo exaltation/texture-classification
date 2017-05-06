@@ -102,9 +102,7 @@ if not options.test_path:
 		if not os.path.exists(files_path):
 			print("Path doesn't exist, try once more")
 	        files_path = raw_input()
-			continue
-
-		if not files_path.endswith('/'):
+		elif not files_path.endswith('/'):
 			print("Path should end with a slash ('/'), try once more")
 	        files_path = raw_input()
 
