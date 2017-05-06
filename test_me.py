@@ -98,12 +98,18 @@ if not options.test_path:
     my_root = os.path.dirname(os.path.realpath(__file__))
     print("Please, enter path to folder, which contains images to evaluate on.")
     files_path = raw_input()
-    while not files_path.endswith('/'):
-        print("Path should end with a slash ('/'), try once more")
-        files_path = raw_input()
+    while not files_path.endswith('/') or not os.path.exists(files_path):
+		if not os.path.exists(files_path):
+			print("Path doesn't exist, try once more")
+	        files_path = raw_input()
+			continue
+
+		if not files_path.endswith('/'):
+			print("Path should end with a slash ('/'), try once more")
+	        files_path = raw_input()
 
     files = []
-    for (_, _, filenames) in os.walk(mypath):
+    for (_, _, filenames) in os.walk(files_path):
         files.extend(filenames)
         break
 
