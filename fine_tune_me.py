@@ -35,8 +35,13 @@ parser.add_option("--validation-split", dest="validation_split",
 parser.add_option("--ignore-saved-features",
                   action="store_true", dest="ignore_saved_features", default=False,
                   help="Ignore saved features for this model and prefix")
+parser.add_option("--optimizer", dest="optimizer",
+				help="Optimizer to train the model. Supported values: adam, nadam, adagrad, adadelta, adamax. Defaults to adam. See keras.io/optimizers for more details.", default='adam')
 
 (options, args) = parser.parse_args()
+
+if options.optimizer not in ('adam', 'nadam', 'adagrad', 'adadelta', 'adamax'):
+	parser.error('Error: Supported values for the optimizer: adam, nadam, adagrad, adadelta, adamax. Given {0}'.format(options.optimizer))
 
 if not options.train_path:   # if train path is not given
 	parser.error('Error: path to training data must be specified. Pass --path to command line')
