@@ -144,10 +144,10 @@ else:
     generator = datagen.flow_from_directory(
             images_dir,
             target_size=(277, 277),
-            batch_size=options.batch_size)
+            batch_size=int(options.batch_size))
 
     print("evaluating...")
-    metrics = model.evaluate_generator(generator, options.steps)
+    metrics = model.evaluate_generator(generator, int(options.steps))
 
     print("{0}: {1}".format(model.metrics_names[0], metrics[0]))
     print("{0}: {1}".format(model.metrics_names[1], metrics[1]))

@@ -58,9 +58,9 @@ model_choice = dict(resnet50=ResNet50,
                     inception_v3=InceptionV3,
                     xception=Xception)
 
-num_epochs = options.num_epochs
-steps_per_epoch = options.steps_per_epoch
-batch_size = options.batch_size
+num_epochs = int(options.num_epochs)
+steps_per_epoch = int(options.steps_per_epoch)
+batch_size = int(options.batch_size)
 
 parent_dir = 'fine_tuned_models/' + model_name + '/'
 ensure_dir(parent_dir)
