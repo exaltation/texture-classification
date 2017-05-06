@@ -103,9 +103,8 @@ if not options.test_path:
 			print("Path doesn't exist, try once more")
 	        files_path = raw_input()
 		else:
-			if not files_path.endswith('/'):
-				print("Path should end with a slash ('/'), try once more")
-		        files_path = raw_input()
+			print("Path should end with a slash ('/'), try once more")
+		    files_path = raw_input()
 
 
     files = []
