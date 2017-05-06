@@ -113,7 +113,7 @@ if not options.test_path:
         break
 
     f_count = 0
-	_filenames = []
+    _filenames = []
     for f in files:
         if not f.lower().endswith(('.bmp', '.jpeg', '.jpg', '.png', '.tif', '.tiff')):
             print("File {0} has wrong extension".format(f))
@@ -124,7 +124,7 @@ if not options.test_path:
         make_new_dir(d)
         shutil.copyfile(files_path + f, d + f)
         f_count += 1
-		_filenames.append(f)
+        _filenames.append(f)
 
 	_filenames = sorted(_filenames)
     for batch, lbls in datagen.flow_from_directory(my_root + '/temporary/',
