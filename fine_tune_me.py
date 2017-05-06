@@ -81,7 +81,7 @@ np.save(open(parent_dir + 'class_names.'+suffix+'.npy', 'w'), class_names)
 num_classes = len(class_names)
 
 def get_train_data():
-    if os.path.isfile(features_file) and os.path.isfile(labels_file):
+    if os.path.isfile(features_file) and os.path.isfile(labels_file) and not options.ignore_saved_features:
         train_features = np.load(open(features_file))
         train_labels = np.load(open(labels_file))
         return train_features, train_labels
