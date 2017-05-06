@@ -22,11 +22,11 @@ parser = OptionParser()
 
 parser.add_option("-p", "--path", dest="train_path", help="Path to training data.")
 parser.add_option("-m", "--model", dest="model_name", help="Specify a model to train: resnet50, vgg16, vgg19, inception_v3 or xception.")
-parser.add_option("-sf", "--suffix", dest="suffix", help="Model will be saved with provided suffix, i.e. bottleneck_fc_model.[suffix].h5.")
-parser.add_option("-ne", "--num-epochs", dest="num_epochs", help="Number of epochs.", default=50)
-parser.add_option("-bs", "--batch-size", dest="batch_size", help="Batch size.", default=16)
-parser.add_option("-spe", "--steps-per-epoch", dest="steps_per_epoch", help="Steps per epoch.", default=500)
-parser.add_option("-vs", "--validation-split", dest="validation_split", help="Amount of data for validation set.", default=0.15)
+parser.add_option("-s", "--suffix", dest="suffix", help="Model will be saved with provided suffix, i.e. bottleneck_fc_model.[suffix].h5.")
+parser.add_option("--num-epochs", dest="num_epochs", help="Number of epochs.", default=50)
+parser.add_option("--batch-size", dest="batch_size", help="Batch size.", default=16)
+parser.add_option("--steps-per-epoch", dest="steps_per_epoch", help="Steps per epoch.", default=500)
+parser.add_option("--validation-split", dest="validation_split", help="Amount of data for validation set.", default=0.15)
 
 (options, args) = parser.parse_args()
 
