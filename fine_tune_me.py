@@ -47,7 +47,7 @@ def ensure_dir(file_path):
     if not os.path.exists(directory):
         os.makedirs(directory)
 
-if model.name not in ['resnet50', 'vgg16', 'vgg19', 'inception_v3', 'xception']:
+if model_name not in ['resnet50', 'vgg16', 'vgg19', 'inception_v3', 'xception']:
     print("please choose one of the following")
     print("resnet50, vgg16, vgg19, inception_v3, xception")
     raise ValueError("model name is invalid or not provided")
