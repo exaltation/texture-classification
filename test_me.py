@@ -101,10 +101,10 @@ if not options.test_path:
     while not files_path.endswith('/') or not os.path.exists(files_path):
 		if not os.path.exists(files_path):
 			print("Path doesn't exist, try once more")
-	        files_path = raw_input()
+			files_path = raw_input()
 		else:
 			print("Path should end with a slash ('/'), try once more")
-		    files_path = raw_input()
+			files_path = raw_input()
 
 
     files = []
