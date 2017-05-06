@@ -30,7 +30,7 @@ parser.add_option("--validation-split", dest="validation_split", help="Amount of
 
 (options, args) = parser.parse_args()
 
-if not options.train_path:   # if filename is not given
+if not options.train_path:   # if train path is not given
 	parser.error('Error: path to training data must be specified. Pass --path to command line')
 data_dir = options.train_path
 
@@ -38,7 +38,7 @@ if not options.model_name:   # if model name is not given
 	parser.error('Error: model name must be specified. Pass --model to command line')
 model_name = options.model_name
 
-if not options.suffix:
+if not options.suffix:   # if suffix is not given
 	parser.error('Error: suffix must be specified. Pass --suffix to command line')
 suffix = options.suffix
 
@@ -48,9 +48,9 @@ def ensure_dir(file_path):
         os.makedirs(directory)
 
 if model_name not in ['resnet50', 'vgg16', 'vgg19', 'inception_v3', 'xception']:
-    print("please choose one of the following")
+    print("Please choose one of the following")
     print("resnet50, vgg16, vgg19, inception_v3, xception")
-    raise ValueError("model name is invalid or not provided")
+    raise ValueError("Model name is invalid")
 
 model_choice = dict(resnet50=ResNet50,
                     vgg16=VGG16,
