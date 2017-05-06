@@ -143,7 +143,7 @@ else:
 
 model.compile(
     loss='categorical_crossentropy',
-    optimizer='adam',
+    optimizer=options.optimizer,
     metrics=['accuracy'])
 
 print("Start training")
