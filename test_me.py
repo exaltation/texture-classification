@@ -30,7 +30,7 @@ parser.add_option("--steps", dest="steps", help="Steps for test data. Defaults t
 
 (options, args) = parser.parse_args()
 
-if options.train_path:   # if test path is given
+if options.test_path:   # if test path is given
 	images_dir = options.test_path
 
 if not options.model_name:   # if model name is not given
