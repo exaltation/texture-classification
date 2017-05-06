@@ -14,13 +14,40 @@ from keras.callbacks import ModelCheckpoint, EarlyStopping
 
 import numpy as np
 import progressbar
+from optparse import OptionParser
+
+sys.setrecursionlimit(40000)
+
+parser = OptionParser()
+
+parser.add_option("-p", "--path", dest="train_path", help="Path to training data.")
+parser.add_option("-m", "--model", dest="model_name", help="Specify a model to train: resnet50, vgg16, vgg19, inception_v3 or xception.")
+parser.add_option("-sf", "--suffix", dest="suffix", help="Model will be saved with provided suffix, i.e. bottleneck_fc_model.[suffix].h5.")
+parser.add_option("-ne", "--num-epochs", dest="num_epochs", help="Number of epochs.", default=50)
+parser.add_option("-bs", "--batch-size", dest="batch_size", help="Batch size.", default=16)
+parser.add_option("-spe", "--steps-per-epoch", dest="steps_per_epoch", help="Steps per epoch.", default=500)
+parser.add_option("-vs", "--validation-split", dest="validation_split", help="Amount of data for validation set.", default=0.15)
+
+(options, args) = parser.parse_args()
+
+if not options.train_path:   # if filename is not given
+	parser.error('Error: path to training data must be specified. Pass --path to command line')
+data_dir = options.train_path
+
+if not options.model_name:   # if model name is not given
+	parser.error('Error: model name must be specified. Pass --model to command line')
+model_name = options.model_name
+
+if not options.suffix:
+	parser.error('Error: suffix must be specified. Pass --suffix to command line')
+suffix = options.suffix
 
 def ensure_dir(file_path):
     directory = os.path.dirname(file_path)
     if not os.path.exists(directory):
         os.makedirs(directory)
 
-if len(sys.argv) < 2 or sys.argv[1] not in ['resnet50', 'vgg16', 'vgg19', 'inception_v3', 'xception']:
+if model.name not in ['resnet50', 'vgg16', 'vgg19', 'inception_v3', 'xception']:
     print("please choose one of the following")
     print("resnet50, vgg16, vgg19, inception_v3, xception")
     raise ValueError("model name is invalid or not provided")
@@ -31,22 +58,19 @@ model_choice = dict(resnet50=ResNet50,
                     inception_v3=InceptionV3,
                     xception=Xception)
 
-model_name = sys.argv[1]
-if len(sys.argv) > 2:
-    data_dir = sys.argv[2]
-else:
-    data_dir = '/home/inky/Desktop/datasets/dtd/images'
-
-num_classes = 47
-num_epochs = 50
-steps_per_epoch = 500
-batch_size = 16
+num_epochs = options.num_epochs
+steps_per_epoch = options.steps_per_epoch
+batch_size = options.batch_size
 
 parent_dir = 'fine_tuned_models/' + model_name + '/'
 ensure_dir(parent_dir)
-features_file = parent_dir + 'train_features.npy'
-labels_file = parent_dir + 'train_labels.npy'
-weights_file = parent_dir + 'bottleneck_fc_model.h5'
+features_file = parent_dir + 'train_features.'+suffix+'.npy'
+labels_file = parent_dir + 'train_labels.'+suffix+'.npy'
+weights_file = parent_dir + 'bottleneck_fc_model.'+suffix+'.h5'
+
+class_names = sorted(os.listdir(data_dir))
+np.save(open(parent_dir + 'class_names.'+suffix+'.npy', 'w'), class_names)
+num_classes = len(class_names)
 
 def get_train_data():
     if os.path.isfile(features_file) and os.path.isfile(labels_file):
@@ -113,7 +137,7 @@ print("Start training")
 model.fit(train_data, train_labels,
     epochs=num_epochs,
     batch_size=batch_size,
-    validation_split=0.15,
+    validation_split=options.validation_split,
     callbacks=[
         ModelCheckpoint(weights_file, save_best_only=True, verbose=2, monitor="val_acc")
     ])
