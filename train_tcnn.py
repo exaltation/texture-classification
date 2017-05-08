@@ -25,7 +25,7 @@ parser.add_option("--batch-size", dest="batch_size",
 				help="Batch size. Defaults to 16", default=16)
 parser.add_option("--steps-per-epoch", dest="steps_per_epoch",
 				help="Steps per epoch. Defaults to 500", default=500)
-parser.add_option("--validaton-steps", dest="validaton_steps",
+parser.add_option("--validaton-steps", dest="validation_steps",
 				help="Validation steps. Defaults to 50", default=50)
 parser.add_option("--optimizer", dest="optimizer",
 				help="Optimizer to train the model. Supported values: adam, nadam, adagrad, adadelta, adamax. Defaults to adam. See keras.io/optimizers for more details.", default='adam')
