@@ -26,7 +26,7 @@ def TCNN(input_shape=(277, 277, 3), classes=47):
 
     x = GlobalAveragePooling2D()(x)
     x = Dense(2048, activation='relu')(x)
-    x = Dropout(0.2)
+    x = Dropout(0.2)(x)
     x = Dense(classes, activation='softmax')(x)
 
     model = Model(inputs=img_input, outputs=x, name='tcnn')
