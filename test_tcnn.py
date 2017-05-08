@@ -2,15 +2,9 @@ import sys
 import os
 import shutil
 
-from models.resnet50 import ResNet50
-from models.vgg16 import VGG16
-from models.vgg19 import VGG19
-from models.inception_v3 import InceptionV3
-from models.xception import Xception
+from models.tcnn import TCNN
 
 from keras.preprocessing.image import ImageDataGenerator
-from keras.models import Sequential, Model
-from keras.layers import Input, Flatten, Dense, Dropout
 from keras.utils import plot_model
 
 import numpy as np
@@ -21,20 +15,19 @@ sys.setrecursionlimit(40000)
 
 parser = OptionParser()
 
-parser.add_option("-p", "--path", dest="test_path", help="Path to test data. Should have tha same structure, as the train data used in fine_tune_me.py. If not provided, you will be asked to provide images for prediction.")
-parser.add_option("-m", "--model", dest="model_name", help="Specify a model for test: resnet50, vgg16, vgg19, inception_v3 or xception (model should be already fine-tuned using fine_tune_me.py).")
-parser.add_option("-s", "--suffix", dest="suffix", help="Used to find proper weights and class names files")
-parser.add_option("--batch-size", dest="batch_size", help="Batch size for test data. Defaults to 16", default=16)
+parser.add_option("-p", "--path", dest="test_path", help="Path to test data. Should have tha same structure, as the train data used in train_tcnn.py. If not provided, you will be asked to provide images for prediction.")
+parser.add_option("-s", "--suffix", dest="suffix",
+				help="Used to find proper weights and class names files")
+parser.add_option("--batch-size", dest="batch_size",
+				help="Batch size. Defaults to 16", default=16)
 parser.add_option("--steps", dest="steps", help="Steps for test data. Defaults to 100", default=100)
+parser.add_option("--target-size", dest="target_size",
+				help="Target size to resize images to. Defaults to 227", default=227)
 
 (options, args) = parser.parse_args()
 
 if options.test_path:   # if test path is given
 	images_dir = options.test_path
-
-if not options.model_name:   # if model name is not given
-	parser.error('Error: model name must be specified. Pass --model to command line')
-model_name = options.model_name
 
 if not options.suffix:   # if suffix is not given
 	parser.error('Error: suffix must be specified. Pass --suffix to command line')
@@ -46,44 +39,22 @@ def make_new_dir(file_path):
         shutil.rmtree(directory)
     os.makedirs(directory)
 
-if model_name not in ['resnet50', 'vgg16', 'vgg19', 'inception_v3', 'xception']:
-    print("please choose one of the following")
-    print("resnet50, vgg16, vgg19, inception_v3, xception")
-    raise ValueError("Model name is invalid")
+target_size = int(options.target_size)
+steps = int(options.steps)
 
-model_choice = dict(resnet50=ResNet50,
-                    vgg16=VGG16,
-                    vgg19=VGG19,
-                    inception_v3=InceptionV3,
-                    xception=Xception)
-
+model_name = 'TCNN'
 parent_dir = 'fine_tuned_models/' + model_name + '/'
 weights_file = parent_dir + 'bottleneck_fc_model.'+suffix+'.h5'
 
 if not os.path.exists(weights_file):
     raise ValueError("Cannot find weights for this model. Please, run fine_tune_me.py on it first.")
 
-class_names = np.load(open(parent_dir + 'class_names.'+suffix+'.npy'))
+class_names = sorted(os.listdir(data_dir))
+np.save(open(parent_dir + 'class_names.'+suffix+'.npy', 'w'), class_names)
 num_classes = len(class_names)
 
-notop_model = model_choice[model_name](include_top=False,
-                                    weights='imagenet',
-                                    input_shape=(277, 277, 3),
-                                    pooling='avg')
-
-top_model = Sequential()
-if model_name in ['vgg16', 'vgg19', 'resnet50']:
-    top_model.add(Dense(4096, activation='relu', input_shape=notop_model.output_shape[1:]))
-    top_model.add(Dense(4096, activation='relu'))
-    top_model.add(Dense(num_classes, activation='softmax'))
-else:
-    top_model.add(Dense(num_classes, activation='softmax', input_shape=notop_model.output_shape[1:]))
-
-top_model.load_weights(weights_file)
-
-model = Sequential()
-model.add(notop_model)
-model.add(top_model)
+model = TCNN(classes=num_classes, input_shape=(target_size, target_size, 3))
+model.load_weights(weights_file)
 
 model.compile(
     loss='categorical_crossentropy',
@@ -127,7 +98,7 @@ if not options.test_path:
 
 	_filenames = sorted(_filenames)
     for batch, lbls in datagen.flow_from_directory(my_root + '/temporary/',
-                                            target_size=(277, 277),
+                                            target_size=(target_size, target_size),
                                             batch_size=1):
         prediction = model.predict_on_batch(batch)
         print('file {0}: {1}'.format(_filenames[lbls.argmax()], class_names[prediction.argmax()]))
@@ -142,7 +113,7 @@ else:
 
     generator = datagen.flow_from_directory(
             images_dir,
-            target_size=(277, 277),
+            target_size=(target_size, target_size),
             batch_size=int(options.batch_size))
 
     print("evaluating...")
