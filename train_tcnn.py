@@ -31,6 +31,9 @@ parser.add_option("--target-size", dest="target_size",
 				help="Target size to resize images to. Defaults to 227", default=227)
 parser.add_option("--optimizer", dest="optimizer",
 				help="Optimizer to train the model. Supported values: adam, nadam, adagrad, adadelta, adamax. Defaults to adam. See keras.io/optimizers for more details.", default='adam')
+parser.add_option("--continue-latest",
+                  action="store_true", dest="_continue", default=False,
+                  help="Load lately saved weights and continue training")
 
 (options, args) = parser.parse_args()
 
@@ -91,6 +94,12 @@ val_generator = val_datagen.flow_from_directory(
     batch_size=batch_size)
 
 model = TCNN(classes=num_classes, input_shape=(target_size, target_size, 3))
+
+if options._continue:
+	if not os.path.exists(weights_file):
+	    print("Cannot find weights for this model. Please, run fine_tune_me.py on it first.")
+	else:
+	    model.load_weights(weights_file)
 
 model.compile(
     loss='categorical_crossentropy',
