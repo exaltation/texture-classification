@@ -57,6 +57,7 @@ steps_per_epoch = int(options.steps_per_epoch)
 validation_steps = int(options.validation_steps)
 batch_size = int(options.batch_size)
 
+model_name = 'TCNN'
 parent_dir = 'fine_tuned_models/' + model_name + '/'
 ensure_dir(parent_dir)
 weights_file = parent_dir + 'bottleneck_fc_model.'+suffix+'.h5'
