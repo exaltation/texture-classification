@@ -27,6 +27,8 @@ parser.add_option("--steps-per-epoch", dest="steps_per_epoch",
 				help="Steps per epoch. Defaults to 500", default=500)
 parser.add_option("--validation-steps", dest="validation_steps",
 				help="Validation steps. Defaults to 50", default=50)
+parser.add_option("--target-size", dest="target_size",
+				help="Target size to resize images to. Defaults to 227", default=227)
 parser.add_option("--optimizer", dest="optimizer",
 				help="Optimizer to train the model. Supported values: adam, nadam, adagrad, adadelta, adamax. Defaults to adam. See keras.io/optimizers for more details.", default='adam')
 
@@ -52,6 +54,8 @@ def ensure_dir(file_path):
     if not os.path.exists(directory):
         os.makedirs(directory)
 
+target_size = int(options.target_size)
+target_size = (target_size, target_size)
 num_epochs = int(options.num_epochs)
 steps_per_epoch = int(options.steps_per_epoch)
 validation_steps = int(options.validation_steps)
@@ -76,7 +80,7 @@ train_datagen = ImageDataGenerator(
 
 train_generator = train_datagen.flow_from_directory(
     data_dir,
-    target_size=(277, 277),
+    target_size=target_size,
     batch_size=batch_size)
 
 val_datagen = ImageDataGenerator(
@@ -84,10 +88,10 @@ val_datagen = ImageDataGenerator(
 
 val_generator = val_datagen.flow_from_directory(
     val_dir,
-    target_size=(277, 277),
+    target_size=target_size,
     batch_size=batch_size)
 
-model = TCNN(classes=num_classes)
+model = TCNN(classes=num_classes, input_shape=target_size)
 
 model.compile(
     loss='categorical_crossentropy',
