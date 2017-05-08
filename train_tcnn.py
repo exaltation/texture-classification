@@ -55,7 +55,6 @@ def ensure_dir(file_path):
         os.makedirs(directory)
 
 target_size = int(options.target_size)
-target_size = (target_size, target_size)
 num_epochs = int(options.num_epochs)
 steps_per_epoch = int(options.steps_per_epoch)
 validation_steps = int(options.validation_steps)
@@ -80,7 +79,7 @@ train_datagen = ImageDataGenerator(
 
 train_generator = train_datagen.flow_from_directory(
     data_dir,
-    target_size=target_size,
+    target_size=(target_size, target_size),
     batch_size=batch_size)
 
 val_datagen = ImageDataGenerator(
@@ -88,10 +87,10 @@ val_datagen = ImageDataGenerator(
 
 val_generator = val_datagen.flow_from_directory(
     val_dir,
-    target_size=target_size,
+    target_size=(target_size, target_size),
     batch_size=batch_size)
 
-model = TCNN(classes=num_classes, input_shape=target_size)
+model = TCNN(classes=num_classes, input_shape=(target_size, target_size, 3))
 
 model.compile(
     loss='categorical_crossentropy',
