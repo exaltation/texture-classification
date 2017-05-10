@@ -24,11 +24,11 @@ parser.add_option("--num-epochs", dest="num_epochs", help="Number of epochs. Def
 parser.add_option("--batch-size", dest="batch_size",
 				help="Batch size. Defaults to 16", default=16)
 parser.add_option("--steps-per-epoch", dest="steps_per_epoch",
-				help="Steps per epoch. Defaults to 300", default=300)
+				help="Steps per epoch. Defaults to 300", default=400)
 parser.add_option("--validation-steps", dest="validation_steps",
 				help="Validation steps. Defaults to 60", default=60)
 parser.add_option("--target-size", dest="target_size",
-				help="Target size to resize images to. Defaults to 227", default=227)
+				help="Target size to resize images to. Defaults to 227", default=277)
 parser.add_option("--optimizer", dest="optimizer",
 				help="Optimizer to train the model. Supported values: adam, nadam, adagrad, adadelta, adamax. Defaults to adam. See keras.io/optimizers for more details.",
 				default='adam')
@@ -74,11 +74,10 @@ np.save(open(parent_dir + 'class_names.'+suffix+'.npy', 'w'), class_names)
 num_classes = len(class_names)
 
 train_datagen = ImageDataGenerator(
-    # width_shift_range=0.2,
-    # height_shift_range=0.2,
-    # shear_range=0.2,
-    # zoom_range=0.2,
-    # fill_mode='wrap',
+    width_shift_range=0.2,
+    height_shift_range=0.2,
+    shear_range=0.2,
+    zoom_range=0.2,
     rescale=1./255)
 
 train_generator = train_datagen.flow_from_directory(

@@ -25,10 +25,10 @@ def TCNN(input_shape=(277, 277, 3), classes=47):
     x = MaxPooling2D((3, 3), strides=(2, 2))(x)
 
     # block 3
-    x = Conv2D(384, (5, 5), padding='same')(x)
-    x = BatchNormalization()(x)
-    x = Activation('relu')(x)
-    x = MaxPooling2D((3, 3), strides=(2, 2))(x)
+    # x = Conv2D(256, (5, 5), padding='same')(x)
+    # x = BatchNormalization()(x)
+    # x = Activation('relu')(x)
+    # x = MaxPooling2D((3, 3), strides=(2, 2))(x)
 
     # block 4
     x = Conv2D(512, (3, 3), padding='same')(x)
@@ -40,7 +40,7 @@ def TCNN(input_shape=(277, 277, 3), classes=47):
 
     # fully-connected
     x = Dense(4096, activation='relu')(x)
-    x = Dropout(0.5)(x)
+    x = Dropout(0.3)(x)
     x = Dense(4096, activation='relu')(x)
     x = Dense(classes, activation='softmax')(x)
 
