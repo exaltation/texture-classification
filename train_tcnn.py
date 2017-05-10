@@ -24,9 +24,9 @@ parser.add_option("--num-epochs", dest="num_epochs", help="Number of epochs. Def
 parser.add_option("--batch-size", dest="batch_size",
 				help="Batch size. Defaults to 16", default=16)
 parser.add_option("--steps-per-epoch", dest="steps_per_epoch",
-				help="Steps per epoch. Defaults to 500", default=300)
+				help="Steps per epoch. Defaults to 300", default=300)
 parser.add_option("--validation-steps", dest="validation_steps",
-				help="Validation steps. Defaults to 50", default=60)
+				help="Validation steps. Defaults to 60", default=60)
 parser.add_option("--target-size", dest="target_size",
 				help="Target size to resize images to. Defaults to 227", default=227)
 parser.add_option("--optimizer", dest="optimizer",
@@ -63,7 +63,7 @@ num_epochs = int(options.num_epochs)
 steps_per_epoch = int(options.steps_per_epoch)
 validation_steps = int(options.validation_steps)
 batch_size = int(options.batch_size)
-
+print(options)
 model_name = 'TCNN'
 parent_dir = 'fine_tuned_models/' + model_name + '/'
 ensure_dir(parent_dir)
