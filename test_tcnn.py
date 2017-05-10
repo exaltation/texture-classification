@@ -49,8 +49,7 @@ weights_file = parent_dir + 'bottleneck_fc_model.'+suffix+'.h5'
 if not os.path.exists(weights_file):
     raise ValueError("Cannot find weights for this model. Please, run fine_tune_me.py on it first.")
 
-class_names = sorted(os.listdir(data_dir))
-np.save(open(parent_dir + 'class_names.'+suffix+'.npy', 'w'), class_names)
+class_names = np.load(open(parent_dir + 'class_names.'+suffix+'.npy'))
 num_classes = len(class_names)
 
 model = TCNN(classes=num_classes, input_shape=(target_size, target_size, 3))
