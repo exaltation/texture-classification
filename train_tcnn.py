@@ -74,11 +74,11 @@ np.save(open(parent_dir + 'class_names.'+suffix+'.npy', 'w'), class_names)
 num_classes = len(class_names)
 
 train_datagen = ImageDataGenerator(
-    width_shift_range=0.2,
-    height_shift_range=0.2,
-    shear_range=0.2,
-    zoom_range=0.2,
-    fill_mode='wrap',
+    # width_shift_range=0.2,
+    # height_shift_range=0.2,
+    # shear_range=0.2,
+    # zoom_range=0.2,
+    # fill_mode='wrap',
     rescale=1./255)
 
 train_generator = train_datagen.flow_from_directory(
