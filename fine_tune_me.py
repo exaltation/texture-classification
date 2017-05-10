@@ -35,6 +35,9 @@ parser.add_option("--validation-split", dest="validation_split",
 parser.add_option("--ignore-saved-features",
                   action="store_true", dest="ignore_saved_features", default=False,
                   help="Ignore saved features for this model and prefix")
+parser.add_option("--no-energy-layer",
+                  action="store_false", dest="energy_layer", default=True,
+                  help="Don't store global average pooling layer at the top of conv layers")
 parser.add_option("--optimizer", dest="optimizer",
 				help="Optimizer to train the model. Supported values: adam, nadam, adagrad, adadelta, adamax. Defaults to adam. See keras.io/optimizers for more details.", default='adam')
 
@@ -104,11 +107,17 @@ def get_train_data():
             target_size=(277, 277),
             batch_size=batch_size)
 
-    model = model_choice[model_name](
-        include_top=False,
-        weights='imagenet',
-        input_shape=(277, 277, 3),
-        pooling='avg')
+	if options.energy_layer:
+		model = model_choice[model_name](
+	        include_top=False,
+	        weights='imagenet',
+	        input_shape=(277, 277, 3),
+	        pooling='avg')
+	else:
+		model = model_choice[model_name](
+	        include_top=False,
+	        weights='imagenet',
+	        input_shape=(277, 277, 3))
 
     print("Extracting features to train on")
     with progressbar.ProgressBar(max_value=steps_per_epoch) as bar:
