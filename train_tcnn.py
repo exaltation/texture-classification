@@ -63,7 +63,7 @@ num_epochs = int(options.num_epochs)
 steps_per_epoch = int(options.steps_per_epoch)
 validation_steps = int(options.validation_steps)
 batch_size = int(options.batch_size)
-print(options)
+
 model_name = 'TCNN'
 parent_dir = 'fine_tuned_models/' + model_name + '/'
 ensure_dir(parent_dir)
