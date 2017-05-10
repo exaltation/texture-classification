@@ -24,13 +24,14 @@ parser.add_option("--num-epochs", dest="num_epochs", help="Number of epochs. Def
 parser.add_option("--batch-size", dest="batch_size",
 				help="Batch size. Defaults to 16", default=16)
 parser.add_option("--steps-per-epoch", dest="steps_per_epoch",
-				help="Steps per epoch. Defaults to 500", default=500)
+				help="Steps per epoch. Defaults to 500", default=300)
 parser.add_option("--validation-steps", dest="validation_steps",
-				help="Validation steps. Defaults to 50", default=50)
+				help="Validation steps. Defaults to 50", default=60)
 parser.add_option("--target-size", dest="target_size",
 				help="Target size to resize images to. Defaults to 227", default=227)
 parser.add_option("--optimizer", dest="optimizer",
-				help="Optimizer to train the model. Supported values: adam, nadam, adagrad, adadelta, adamax. Defaults to adam. See keras.io/optimizers for more details.", default='adam')
+				help="Optimizer to train the model. Supported values: adam, nadam, adagrad, adadelta, adamax. Defaults to adam. See keras.io/optimizers for more details.",
+				default='adam')
 parser.add_option("--continue-latest",
                   action="store_true", dest="_continue", default=False,
                   help="Load lately saved weights and continue training")
