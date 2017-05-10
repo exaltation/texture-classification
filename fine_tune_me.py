@@ -118,6 +118,7 @@ def get_train_data():
 	        include_top=False,
 	        weights='imagenet',
 	        input_shape=(277, 277, 3))
+		model = Flatten()(model)
 
     print("Extracting features to train on")
     with progressbar.ProgressBar(max_value=steps_per_epoch) as bar:
@@ -143,23 +144,12 @@ def get_train_data():
 train_data, train_labels = get_train_data()
 
 model = Sequential()
-if not options.energy_layer:
-	model.add(Flatten(input_shape=train_data.shape[1:]))
-
 if model_name in ['vgg16', 'vgg19', 'resnet50']:
-    if options.energy_layer:
-        model.add(Dense(4096, activation='relu', input_shape=train_data.shape[1:]))
-	    model.add(Dense(4096, activation='relu'))
-	    model.add(Dense(num_classes, activation='softmax'))
-    else:
-		model.add(Dense(4096, activation='relu'))
-	    model.add(Dense(4096, activation='relu'))
-	    model.add(Dense(num_classes, activation='softmax'))
+    model.add(Dense(4096, activation='relu', input_shape=train_data.shape[1:]))
+    model.add(Dense(4096, activation='relu'))
+    model.add(Dense(num_classes, activation='softmax'))
 else:
-	if options.energy_layer:
-		model.add(Dense(num_classes, activation='softmax', input_shape=train_data.shape[1:]))
-	else:
-		model.add(Dense(num_classes, activation='softmax'))
+    model.add(Dense(num_classes, activation='softmax', input_shape=train_data.shape[1:]))
 
 model.compile(
     loss='categorical_crossentropy',
