@@ -53,19 +53,19 @@ def TCNN2(input_shape=(277, 277, 3), classes=47):
     img_input = Input(shape=input_shape)
 
     # block 1
-    x = Conv2D(64, (3, 3), padding='same')(img_input)
+    x = Conv2D(96, (3, 3), padding='same')(img_input)
     x = BatchNormalization()(x)
     x = Activation('relu')(x)
     x = MaxPooling2D((3, 3), strides=(2, 2))(x)
 
     # block 2
-    x = Conv2D(96, (3, 3), padding='same')(x)
+    x = Conv2D(128, (3, 3), padding='same')(x)
     x = BatchNormalization()(x)
     x = Activation('relu')(x)
     x = MaxPooling2D((3, 3), strides=(2, 2))(x)
 
     # block 3
-    x = Conv2D(128, (3, 3), padding='same')(x)
+    x = Conv2D(256, (3, 3), padding='same')(x)
     x = BatchNormalization()(x)
     x = Activation('relu')(x)
     # x = MaxPooling2D((2, 2))(x)
