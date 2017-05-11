@@ -1,7 +1,7 @@
 import sys
 import os
 
-from models.tcnn import TCNN
+from models.tcnn import TCNN, TCNN2
 
 from keras.preprocessing.image import ImageDataGenerator
 from keras.models import Sequential
@@ -18,6 +18,7 @@ parser = OptionParser()
 
 parser.add_option("-p", "--path", dest="train_path", help="Path to training data.")
 parser.add_option("-v", "--val", dest="val_path", help="Path to validation data.")
+parser.add_option("-m", "--model", dest="model_name", help="Model name. Defaults to TCNN")
 parser.add_option("-s", "--suffix", dest="suffix",
 				help="Model will be saved with provided suffix, i.e. bottleneck_fc_model.[suffix].h5.")
 parser.add_option("--num-epochs", dest="num_epochs", help="Number of epochs. Defaults to 100", default=100)
@@ -64,7 +65,11 @@ steps_per_epoch = int(options.steps_per_epoch)
 validation_steps = int(options.validation_steps)
 batch_size = int(options.batch_size)
 
-model_name = 'TCNN'
+model_choice = dict(TCNN=TCNN, TCNN2=TCNN2)
+
+model_name = options.model_name
+if model_name not in ('TCNN', 'TCNN2'):
+	parser.error('Error: Model name should be TCNN or TCNN2')
 parent_dir = 'fine_tuned_models/' + model_name + '/'
 ensure_dir(parent_dir)
 weights_file = parent_dir + 'bottleneck_fc_model.'+suffix+'.h5'
@@ -93,7 +98,7 @@ val_generator = val_datagen.flow_from_directory(
     target_size=(target_size, target_size),
     batch_size=batch_size)
 
-model = TCNN(classes=num_classes, input_shape=(target_size, target_size, 3))
+model = model_choice[model_name](classes=num_classes, input_shape=(target_size, target_size, 3))
 
 if options._continue:
 	if not os.path.exists(weights_file):
