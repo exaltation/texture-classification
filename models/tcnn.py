@@ -54,34 +54,24 @@ def TCNN2(input_shape=(277, 277, 3), classes=47):
 
     # block 1
     x = Conv2D(64, (3, 3), padding='same')(img_input)
-    x = Conv2D(64, (3, 3), padding='same')(img_input)
     x = BatchNormalization()(x)
     x = Activation('relu')(x)
-    x = MaxPooling2D((2, 2), strides=(2, 2))(x)
+    x = MaxPooling2D((3, 3), strides=(2, 2))(x)
 
     # block 2
-    x = Conv2D(128, (3, 3), padding='same')(x)
-    x = Conv2D(128, (3, 3), padding='same')(x)
+    x = Conv2D(96, (3, 3), padding='same')(x)
     x = BatchNormalization()(x)
     x = Activation('relu')(x)
-    x = MaxPooling2D((2, 2), strides=(2, 2))(x)
+    x = MaxPooling2D((3, 3), strides=(2, 2))(x)
 
     # block 3
-    x = Conv2D(256, (3, 3), padding='same')(x)
-    x = Conv2D(256, (3, 3), padding='same')(x)
+    x = Conv2D(128, (3, 3), padding='same')(x)
     x = BatchNormalization()(x)
     x = Activation('relu')(x)
-    x = MaxPooling2D((2, 2), strides=(2, 2))(x)
+    x = MaxPooling2D((2, 2))(x)
 
     # block 4
-    x = Conv2D(512, (3, 3), padding='same')(x)
-    x = Conv2D(512, (3, 3), padding='same')(x)
-    x = BatchNormalization()(x)
-    x = Activation('relu')(x)
-    x = MaxPooling2D((2, 2), strides=(2, 2))(x)
-
-    # block 5
-    x = Conv2D(640, (3, 3), padding='same')(x)
+    x = Conv2D(192, (3, 3), padding='same')(x)
     x = BatchNormalization()(x)
     x = Activation('relu')(x)
 
