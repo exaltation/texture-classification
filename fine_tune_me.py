@@ -17,7 +17,8 @@ import progressbar
 from optparse import OptionParser
 
 sys.setrecursionlimit(40000)
-
+from PIL import ImageFile
+ImageFile.LOAD_TRUNCATED_IMAGES = True
 parser = OptionParser()
 
 parser.add_option("-p", "--path", dest="train_path", help="Path to training data.")
@@ -35,13 +36,50 @@ parser.add_option("--validation-split", dest="validation_split",
 parser.add_option("--ignore-saved-features",
                   action="store_true", dest="ignore_saved_features", default=False,
                   help="Ignore saved features for this model and prefix")
+parser.add_option("--target-size", dest="target_size",
+				help="Target size to resize images to. Defaults to 277", default=277)
 parser.add_option("--no-energy-layer",
                   action="store_false", dest="energy_layer", default=True,
                   help="Don't store global average pooling layer at the top of conv layers")
 parser.add_option("--optimizer", dest="optimizer",
 				help="Optimizer to train the model. Supported values: adam, nadam, adagrad, adadelta, adamax. Defaults to adam. See keras.io/optimizers for more details.", default='adam')
 
+parser.add_option("--rotation-range", dest="rotation_range",
+				help="Rotation range for training data. Defaults to 0", default=0.)
+parser.add_option("--width-shift-range", dest="width_shift_range",
+				help="Width shift range for training data. Defaults to 0", default=0.)
+parser.add_option("--height-shift-range", dest="height_shift_range",
+				help="Height shift range for training data. Defaults to 0", default=0.)
+parser.add_option("--shear-range", dest="shear_range",
+				help="Shear range for training data. Defaults to 0", default=0.)
+parser.add_option("--zoom-range", dest="zoom_range",
+				help="Zoom range for training data. Defaults to 0", default=0.)
+parser.add_option("--channel-shift-range", dest="channel_shift_range",
+				help="Channel shift range for training data. Defaults to 0", default=0.)
+parser.add_option("--fill-mode", dest="fill_mode",
+				help="One of constant, nearest, reflect or wrap. Points outside the boundaries of the input are filled according to the given mode. Defaults to nearest",
+				default="nearest")
+parser.add_option("--cval", dest="cval",
+				help="Float or Int. Value used for points outside the boundaries when fill_mode = constant. Defaults to 0", default=0.)
+parser.add_option("--horizontal-flip", dest="horizontal_flip",
+				action="store_true",
+				help="Randomly flip inputs horizontally", default=False)
+parser.add_option("--vertical-flip", dest="vertical_flip",
+				action="store_true",
+				help="Randomly flip inputs vertically", default=False)
+
 (options, args) = parser.parse_args()
+
+rotation_range = float(options.rotation_range)
+width_shift_range = float(options.width_shift_range)
+height_shift_range = float(options.height_shift_range)
+shear_range = float(options.shear_range)
+zoom_range = float(options.zoom_range)
+channel_shift_range = float(options.channel_shift_range)
+fill_mode = options.fill_mode
+cval = float(options.cval)
+horizontal_flip = options.horizontal_flip
+vertical_flip = options.vertical_flip
 
 if options.optimizer not in ('adam', 'nadam', 'adagrad', 'adadelta', 'adamax'):
 	parser.error('Error: Supported values for the optimizer: adam, nadam, adagrad, adadelta, adamax. Given {0}'.format(options.optimizer))
@@ -74,6 +112,7 @@ model_choice = dict(resnet50=ResNet50,
                     inception_v3=InceptionV3,
                     xception=Xception)
 
+target_size = int(options.target_size)
 num_epochs = int(options.num_epochs)
 steps_per_epoch = int(options.steps_per_epoch)
 batch_size = int(options.batch_size)
@@ -95,29 +134,34 @@ def get_train_data():
         return train_features, train_labels
 
     train_datagen = ImageDataGenerator(
-        width_shift_range=0.2,
-        height_shift_range=0.2,
-        shear_range=0.2,
-        zoom_range=0.2,
-        fill_mode='wrap',
+		rotation_range=rotation_range,
+	    width_shift_range=width_shift_range,
+	    height_shift_range=height_shift_range,
+	    shear_range=shear_range,
+	    zoom_range=zoom_range,
+	    channel_shift_range=channel_shift_range,
+	    fill_mode=fill_mode,
+	    cval=cval,
+	    horizontal_flip=horizontal_flip,
+	    vertical_flip=vertical_flip,
         rescale=1./255)
 
     train_generator = train_datagen.flow_from_directory(
             data_dir,
-            target_size=(277, 277),
+            target_size=(target_size, target_size),
             batch_size=batch_size)
 
     if options.energy_layer:
 		model = model_choice[model_name](
 	        include_top=False,
 	        weights='imagenet',
-	        input_shape=(277, 277, 3),
+	        input_shape=(target_size, target_size, 3),
 	        pooling='avg')
     else:
 		model = model_choice[model_name](
 	        include_top=False,
 	        weights='imagenet',
-	        input_shape=(277, 277, 3))
+	        input_shape=(target_size, target_size, 3))
 
     print("Extracting features to train on")
     with progressbar.ProgressBar(max_value=steps_per_epoch) as bar:

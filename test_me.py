@@ -26,11 +26,15 @@ parser.add_option("-m", "--model", dest="model_name", help="Specify a model for 
 parser.add_option("-s", "--suffix", dest="suffix", help="Used to find proper weights and class names files")
 parser.add_option("--batch-size", dest="batch_size", help="Batch size for test data. Defaults to 16", default=16)
 parser.add_option("--steps", dest="steps", help="Steps for test data. Defaults to 100", default=100)
+parser.add_option("--target-size", dest="target_size",
+				help="Target size to resize images to. Defaults to 277", default=277)
 
 (options, args) = parser.parse_args()
 
 if options.test_path:   # if test path is given
 	images_dir = options.test_path
+
+target_size = int(options.target_size)
 
 if not options.model_name:   # if model name is not given
 	parser.error('Error: model name must be specified. Pass --model to command line')
@@ -68,7 +72,7 @@ num_classes = len(class_names)
 
 notop_model = model_choice[model_name](include_top=False,
                                     weights='imagenet',
-                                    input_shape=(277, 277, 3),
+                                    input_shape=(target_size, target_size, 3),
                                     pooling='avg')
 
 top_model = Sequential()
@@ -127,7 +131,7 @@ if not options.test_path:
 
 	_filenames = sorted(_filenames)
     for batch, lbls in datagen.flow_from_directory(my_root + '/temporary/',
-                                            target_size=(277, 277),
+                                            target_size=(target_size, target_size),
                                             batch_size=1):
         prediction = model.predict_on_batch(batch)
         print('file {0}: {1}'.format(_filenames[lbls.argmax()], class_names[prediction.argmax()]))
@@ -142,7 +146,7 @@ else:
 
     generator = datagen.flow_from_directory(
             images_dir,
-            target_size=(277, 277),
+            target_size=(target_size, target_size),
             batch_size=int(options.batch_size))
 
     print("evaluating...")
