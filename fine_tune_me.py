@@ -214,7 +214,7 @@ print("Start training")
 model.fit(train_data, train_labels,
     epochs=num_epochs,
     batch_size=batch_size,
-    validation_split=options.validation_split,
+    validation_split=float(options.validation_split),
     callbacks=[
         ModelCheckpoint(weights_file, save_best_only=True, verbose=2, monitor="val_acc")
     ])
